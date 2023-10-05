@@ -4,6 +4,16 @@ const canvas = document.querySelector("canvas");
 gradient.initGradient("canvas");
 
 window.onclick = function () {
+
+
+  // gradient.updateNoiseSpeed(32)
+
+  changeSpeed({
+    start: 10,
+    end: 10.3
+  })
+
+
     changeColor(0, {
         start: "#c3e4ff",
         end: "#043D5D",
@@ -22,6 +32,29 @@ window.onclick = function () {
         end: "#0F595E"
     });
 };
+
+function changeSpeed(config) {
+  const obj = {};
+
+  gsap.fromTo(
+    obj,
+    {
+      x: config.start,
+    },
+    {
+      x: config.end,
+      ease: Power3.easeOut,
+      duration: 10,
+      yoyo: true,
+      onUpdate: function () {
+        gradient.updateNoiseSpeed(obj.x)
+      },
+      // onComplete: function() {
+      //   this.reverse();
+      // }
+    }
+  );
+}
 
 function changeColor(colorNumber = null, config) {
   const obj = {};
@@ -48,9 +81,9 @@ function changeColor(colorNumber = null, config) {
         if(config.base) gradient.updateBaseColor(hex);
         else gradient.updateColor(colorNumber, hex);
       },
-      onComplete: function() {
-        this.reverse();
-      }
+      // onComplete: function() {
+      //   this.reverse();
+      // }
     }
   );
 }
@@ -58,3 +91,5 @@ function changeColor(colorNumber = null, config) {
 function rgbToHex(r, g, b) {
   return "0x" + ((1 << 24) | (r << 16) | (g << 8) | b).toString(16).slice(1);
 }
+
+// gradient.amp = 150;
