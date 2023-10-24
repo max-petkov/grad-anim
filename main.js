@@ -1,37 +1,66 @@
 const gradient = new Gradient();
-const canvas = document.querySelector("canvas");
-
 gradient.initGradient("canvas");
 
-window.onclick = function () {
+// Controls
+const gui = new dat.GUI();
+const colorFolder = gui.addFolder('Colors');
+const noiseFrequencyFolder = gui.addFolder('Noise Frequency'); 
+colorFolder.open();
+noiseFrequencyFolder.open();
+const palette = {
+  colorOne: "#c3e4ff",
+  colorTwo: "#6ec3f4",
+  colorThree: "#eae2ff",
+  colorFour: "#b9beff",
+}
+const additional = {
+  noiseSpeed: 10,
+  noiseFlow: 1,
+}
+const noiseFrequency = {
+  valOne: 3,
+  valTwo: 4,
+}
+colorFolder.addColor(palette, "colorOne").onChange((color) => gradient.updateBaseColor("0x" + color.split("#").join("")));
+colorFolder.addColor(palette, "colorTwo").onChange((color) => gradient.updateColor(0, "0x" + color.split("#").join("")));
+colorFolder.addColor(palette, "colorThree").onChange((color) => gradient.updateColor(1, "0x" + color.split("#").join("")));
+colorFolder.addColor(palette, "colorFour").onChange((color) => gradient.updateColor(2, "0x" + color.split("#").join("")));
+
+gui.add(additional,"noiseSpeed", 0, 100, 0.1).name("Noise Speed").onChange((num) => gradient.updateNoiseSpeed(num));
+gui.add(additional,"noiseFlow", 0, 100, 0.1).name("Noise Flow").onChange((num) => gradient.updateNoiseFlow(num));
+
+noiseFrequencyFolder.add(noiseFrequency, "valOne", 0, 100, 0.01).name("Value 1").onChange((num) => gradient.updateNoiseFreq([num, noiseFrequency.valTwo]));
+noiseFrequencyFolder.add(noiseFrequency, "valTwo", 0, 100, 0.01).name("Value 2").onChange((num) => gradient.updateNoiseFreq([noiseFrequency.valOne, num]));
 
 
-  // gradient.updateNoiseSpeed(32)
-
-  changeSpeed({
-    start: 10,
-    end: 10.3
-  })
 
 
-    changeColor(0, {
-        start: "#c3e4ff",
-        end: "#043D5D",
-        base: true,
-    });
-    changeColor(0, {
-        start: "#6ec3f4",
-        end: "#032E46",
-    });
-    changeColor(1, {
-        start: "#eae2ff",
-        end: "#23B684"
-    });
-    changeColor(2, {
-        start: "#b9beff",
-        end: "#0F595E"
-    });
-};
+// window.onclick = function () {
+
+//   changeSpeed({
+//     start: 10,
+//     end: 10.3
+//   })
+
+
+//     changeColor(0, {
+//         start: "#c3e4ff",
+//         end: "#043D5D",
+//         base: true,
+//     });
+//     changeColor(0, {
+//         start: "#6ec3f4",
+//         end: "#032E46",
+//     });
+//     changeColor(1, {
+//         start: "#eae2ff",
+//         end: "#23B684"
+//     });
+//     changeColor(2, {
+//         start: "#b9beff",
+//         end: "#0F595E"
+//     });
+// };
 
 function changeSpeed(config) {
   const obj = {};
@@ -49,9 +78,6 @@ function changeSpeed(config) {
       onUpdate: function () {
         gradient.updateNoiseSpeed(obj.x)
       },
-      // onComplete: function() {
-      //   this.reverse();
-      // }
     }
   );
 }
@@ -81,9 +107,6 @@ function changeColor(colorNumber = null, config) {
         if(config.base) gradient.updateBaseColor(hex);
         else gradient.updateColor(colorNumber, hex);
       },
-      // onComplete: function() {
-      //   this.reverse();
-      // }
     }
   );
 }
@@ -91,5 +114,3 @@ function changeColor(colorNumber = null, config) {
 function rgbToHex(r, g, b) {
   return "0x" + ((1 << 24) | (r << 16) | (g << 8) | b).toString(16).slice(1);
 }
-
-// gradient.amp = 150;

@@ -395,7 +395,8 @@ function normalizeColor(hexCode) {
                         value: -.5
                     }),
                     noiseFreq: new this.minigl.Uniform({
-                        value: [3, 4],
+                        value: [1, 3],
+                        // value: [3, 4],
                         type: "vec2"
                     }),
                     noiseAmp: new this.minigl.Uniform({
@@ -487,11 +488,11 @@ function normalizeColor(hexCode) {
     updateNoiseSpeed(speed) {
         this.uniforms.u_vertDeform.value.noiseSpeed.value = speed;
     }
-    updateNoiseFlow() {
-
+    updateNoiseFlow(flow) {
+        this.uniforms.u_vertDeform.value.noiseFlow.value = flow;
     }
-    updateNoiseFreq() {
-
+    updateNoiseFreq(freq) {
+        this.uniforms.u_vertDeform.value.noiseFreq.value = freq;
     }
     /*
     * Waiting for the css variables to become available, usually on page load before we can continue.
